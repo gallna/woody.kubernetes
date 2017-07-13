@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: jupyter
+spec:
+  ports:
+    - port: 8888
+      targetPort: 8888
+  selector:
+    component: jupyter
+  type: LoadBalancer
