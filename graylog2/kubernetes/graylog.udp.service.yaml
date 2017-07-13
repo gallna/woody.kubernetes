@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graylog-udp
+  namespace: logging
+  labels:
+    service: graylog
+    input: udp
+spec:
+  type: LoadBalancer
+  ports:
+  - name: syslog-udp
+    port: 514
+    protocol: UDP
+    targetPort: 514
+  - name: syslog-rfc3164-udp
+    port: 3514
+    protocol: UDP
+    targetPort: 3514
+  - name: syslog-rfc5424-udp
+    port: 5514
+    protocol: UDP
+    targetPort: 5514
+  - name: syslog-generic-udp
+    port: 5140
+    protocol: UDP
+    targetPort: 5140
+  selector:
+    app: graylog
+    tier: graylog
+    role: master

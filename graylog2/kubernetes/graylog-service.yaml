@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graylog
+  namespace: logging
+  labels:
+    service: graylog
+spec:
+  type: LoadBalancer
+  ports:
+  - name: web-interface
+    port: 80
+    protocol: TCP
+    targetPort: 9000
+  - name: syslog-tcp
+    port: 514
+    protocol: TCP
+    targetPort: 514
+  - name: syslog-rfc3164-tcp
+    port: 3514
+    protocol: TCP
+    targetPort: 3514
+  - name: syslog-rfc5424-tcp
+    port: 5514
+    protocol: TCP
+    targetPort: 5514
+  - name: syslog-generic-tcp
+    port: 5140
+    protocol: TCP
+    targetPort: 5140
+  selector:
+    app: graylog
+    tier: graylog

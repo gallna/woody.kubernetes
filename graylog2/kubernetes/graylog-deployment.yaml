@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: logging
+  name: graylog
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: graylog
+        tier: graylog
+        role: master
+    spec:
+      containers:
+      - image: graylog2/server:2.2.3-1
+        name: graylog
+        env:
+        - name: GRAYLOG_WEB_ENDPOINT_URI
+          value: http://graylog.wrrr.online/api
+        - name: GRAYLOG_PASSWORD_SECRET
+          value: somesaltpassword
+        - name: GRAYLOG_ROOT_PASSWORD_SHA2
+          value: 5D5E792708BFA15F0AB42E817B4E69379777D2722E0529DFB031C0B847DB137D
+        ports:
+        - name: web-interface
+          containerPort: 9000
+        - name: gelf-tcp
+          containerPort: 12201
+        - name: syslog-udp
+          containerPort: 514
+          protocol: UDP
+        volumeMounts:
+        - name: graylog-config-persistent-storage
+          mountPath: /usr/share/graylog/data/config
+        - name: graylog-journal-persistent-storage
+          mountPath: /usr/share/graylog/data/journal
+      restartPolicy: Always
+      volumes:
+      - name: graylog-config-persistent-storage
+        persistentVolumeClaim:
+          claimName: graylog-config-pv-claim
+      - name: graylog-journal-persistent-storage
+        persistentVolumeClaim:
+          claimName: graylog-journal-pv-claim
