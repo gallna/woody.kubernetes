@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: fabric8.wrrr.online-fanout
+spec:
+  rules:
+  - host: fabric8.wrrr.online
+    http:
+      paths:
+      - path: /fabric8
+        backend:
+          serviceName: fabric8
+          servicePort: 80
+      - path: /forge
+        backend:
+          serviceName: fabric8-forge
+          servicePort: 80
+      - path: /registry
+        backend:
+          serviceName: fabric8-docker-registry
+          servicePort: 80

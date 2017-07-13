@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: path-based-ingress
+spec:
+  rules:
+  - host: foo.bar.com
+    http:
+      paths:
+      - path: /foo
+        backend:
+          serviceName: nginx-service-1
+          servicePort: 90
+      - path: /bar
+        backend:
+          serviceName: nginx-service-2
+          servicePort: 90

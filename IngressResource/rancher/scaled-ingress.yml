@@ -1,0 +1,11 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: scaledlb
+  annotations:
+    scale: "2"
+    http.port: "99"
+spec:
+  backend:
+    serviceName: nginx-service
+    servicePort: 90

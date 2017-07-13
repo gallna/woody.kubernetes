@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: path-based-ingress
+  annotations:
+    kubernetes.io/ingress.class: "rancher"
+spec:
+  rules:
+  - host: fabric8.wrrr.online
+    http:
+      paths:
+      - backend:
+          serviceName: monitoring-grafana
+          servicePort: 80
+        path: /grafana
+      - backend:
+          serviceName: heapster
+          servicePort: 80
+        path: /heapster
+      - backend:
+          serviceName: kubernetes-dashboard
+          servicePort: 9090
+        path: /kubernetes

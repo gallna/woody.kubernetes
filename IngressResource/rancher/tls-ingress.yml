@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: tlslb
+  annotations:
+    https.port: "444"
+spec:
+  tls:
+   - secretName: foo
+  backend:
+    serviceName: nginx-service
+    servicePort: 90

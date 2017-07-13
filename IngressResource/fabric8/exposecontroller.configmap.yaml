@@ -1,0 +1,20 @@
+apiVersion: v1
+data:
+  config.yml: |-
+    domain: nip.io
+    domain: wrrr.online
+    domain: svc.cluster.local
+    exposer: Ingress
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2017-06-21T12:37:20Z
+  labels:
+    group: io.fabric8.devops.apps
+    project: exposecontroller
+    provider: fabric8
+    version: 2.2.311
+  name: exposecontroller
+  namespace: default
+  resourceVersion: "1475159"
+  selfLink: /api/v1/namespaces/default/configmaps/exposecontroller
+  uid: 5e83063f-567e-11e7-884c-02cc7af39e06
