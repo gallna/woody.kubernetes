@@ -1,0 +1,63 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch
+spec:
+  serviceName: "elasticsearch"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      securityContext:
+        runAsUser: 1000
+      containers:
+      - name: elasticsearch
+        image: elasticsearch:2.3
+        env:
+        - name: ES_CLUSTER_NAME
+          value: graylog
+        ports:
+        - name: api
+          containerPort: 9200
+        - name: clients
+          containerPort: 9300
+        volumeMounts:
+        - name: elasticsearch-pv
+          mountPath: /usr/share/elasticsearch/data
+        command:
+          - "/bin/bash"
+          - "-ecx"
+          - |
+            # The use of qualified `hostname -f` is crucial:
+            CRARGS=( -Des.cluster.name="${ES_CLUSTER_NAME}" )
+            if [ "$(hostname)" == "elasticsearch-0" ]; then
+              # Let the first node be master node, other data nodes
+              CRARGS+=( -Des.multicast.enabled=true -Des.node.data=false -Des.node.master=true )
+            else
+              CRARGS+=( -Des.multicast.enabled=false -Des.node.data=true -Des.node.master=false )
+              CRARGS+=( -Des.network.host=_non_loopback:ipv4_ -Des.discovery.zen.minimum_master_nodes=1 )
+              CRARGS+=( -Des.discovery.zen.ping.unicast.hosts=elasticsearch )
+            fi
+            exec /usr/share/elasticsearch/bin/elasticsearch ${CRARGS[*]}
+      # No pre-stop hook is required, a SIGTERM plus some time is all that's
+      # needed for graceful shutdown of a node.
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - name: elasticsearch-pv
+        persistentVolumeClaim:
+          claimName: elasticsearch-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: elasticsearch-pv
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "default"
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: 20Gi

@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cerebro
+  labels:
+    component: elasticsearch
+    role: cerebro
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        component: elasticsearch
+        role: cerebro
+    spec:
+      containers:
+      - image: yannart/cerebro:0.6.5
+        name: cerebro
+        ports:
+        - name: http
+          containerPort: 9000
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "768Mi"
+      restartPolicy: Always

@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: es-master
+  labels:
+    component: elasticsearch
+    role: master
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        component: elasticsearch
+        role: master
+    spec:
+      restartPolicy: Always
+      containers:
+      - args:
+        - elasticsearch
+        - -Des.cluster.name=graylog
+        - -Des.node.data=false
+        - -Des.node.master=true
+        - -Des.multicast.enabled=true
+        image: elasticsearch:2.3
+        name: master
+        ports:
+        - name: api
+          containerPort: 9200
+        - name: clients
+          containerPort: 9300
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "512Mi"
+          limits:
+            cpu: "500m"
+            memory: "2Gi"
+        volumeMounts:
+        - name: es-master-pv
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: es-master-pv
+        persistentVolumeClaim:
+          claimName: es-master-pvc

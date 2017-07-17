@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cerebro
+  labels:
+    component: elasticsearch
+    role: cerebro
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 9000
+  selector:
+    component: elasticsearch
+    role: cerebro

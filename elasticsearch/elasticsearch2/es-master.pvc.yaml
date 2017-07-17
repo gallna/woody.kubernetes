@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: es-master-pvc
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "efs"
+  labels:
+    component: elasticsearch
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi

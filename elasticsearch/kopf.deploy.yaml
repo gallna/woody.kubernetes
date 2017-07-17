@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kopf
+  labels:
+    component: elasticsearch
+    role: kopf
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        component: elasticsearch
+        role: kopf
+    spec:
+      containers:
+      - env:
+        - name: KOPF_ES_SERVERS
+          value: :9200
+        - name: KOPF_SERVER_NAME
+          value: kopf.logspout
+        - name: LOGSPOUT
+          value: ignore
+        image: lmenezes/elasticsearch-kopf:1.6.2
+        name: kopf
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
