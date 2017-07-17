@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: logging
+  name: mongo-pv-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "efs"
+  labels:
+    type: efs
+    app: graylog
+    component: mongo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      component: mongo
+  resources:
+    requests:
+      storage: 20Gi

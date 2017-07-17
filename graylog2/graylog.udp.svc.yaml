@@ -4,7 +4,8 @@ metadata:
   name: graylog-udp
   namespace: logging
   labels:
-    service: graylog
+    app: graylog
+    tier: graylog
     input: udp
 spec:
   type: LoadBalancer
@@ -25,6 +26,10 @@ spec:
     port: 5140
     protocol: UDP
     targetPort: 5140
+  - name: syslog-rfc3164-haproxy
+    port: 11002
+    protocol: UDP
+    targetPort: 11002
   selector:
     app: graylog
     tier: graylog

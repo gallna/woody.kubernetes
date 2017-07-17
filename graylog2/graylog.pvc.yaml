@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: logging
+  name: graylog-config-pv-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "efs"
+  labels:
+    app: graylog
+    component: graylog-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      component: graylog-config
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: logging
+  name: graylog-journal-pv-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "efs"
+  labels:
+    app: graylog
+    component: graylog-journal
+spec:
+  accessModes:
+    - ReadWriteOnce
+  selector:
+    matchLabels:
+      component: graylog-journal
+  resources:
+    requests:
+      storage: 20Gi

@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: logging
+  namespace: logging
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: graylog.wrrr.online
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: graylog
+          servicePort: 80

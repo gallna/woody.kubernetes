@@ -35,7 +35,13 @@ spec:
           mountPath: /usr/share/graylog/data/config
         - name: graylog-journal-persistent-storage
           mountPath: /usr/share/graylog/data/journal
-      restartPolicy: Always
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "1"
+            memory: "3Gi"
       volumes:
       - name: graylog-config-persistent-storage
         persistentVolumeClaim:
