@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grafana-import
+spec:
+  template:
+    metadata:
+      name: grafana-import
+      labels:
+        app: grafana
+        component: import
+    spec:
+      serviceAccount: io-rancher-system
+      serviceAccountName: io-rancher-system
+      restartPolicy: Never
+      containers:
+      - name: grafana-import
+        image: giantswarm/tiny-tools
+        command: ["/bin/sh", "-c"]
+        workingDir: /var/lib/grafana
+        args:
+          - >
+            curl -sL https://grafana.com/api/plugins/raintank-kubernetes-app/versions/0.0.7/download > plugin.zip;
+            mkdir -p /var/lib/grafana/plugins;
+            unzip -d /var/lib/grafana/plugins plugin.zip;
+        volumeMounts:
+        - name: grafana-pv
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-pv
+        persistentVolumeClaim:
+          claimName: grafana-pvc

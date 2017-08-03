@@ -4,29 +4,24 @@ metadata:
   name: graylog-tcp
   namespace: logging
   labels:
-    app: graylog
-    tier: graylog
+    component: logging
     input: tcp
+    app: graylog
 spec:
   type: LoadBalancer
   ports:
-  - name: syslog-tcp
-    port: 514
+  - name: logspout
+    port: 2514
     protocol: TCP
-    targetPort: 514
-  - name: syslog-rfc3164-tcp
+    targetPort: 2514
+  - name: rfc3164
     port: 3514
     protocol: TCP
     targetPort: 3514
-  - name: syslog-rfc5424-tcp
+  - name: rfc5424
     port: 5514
     protocol: TCP
     targetPort: 5514
-  - name: syslog-generic-tcp
-    port: 5140
-    protocol: TCP
-    targetPort: 5140
   selector:
+    component: logging
     app: graylog
-    tier: graylog
-    role: master

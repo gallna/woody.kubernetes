@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphite-pickle
+  labels:
+    component: monitoring
+    app: graphite
+spec:
+  type: ClusterIP
+  ports:
+  - name: carbon-rpickle
+    port: 2004
+  - name: carbon-apickle
+    port: 2024
+    selector:
+      component: monitoring
+      app: graphite

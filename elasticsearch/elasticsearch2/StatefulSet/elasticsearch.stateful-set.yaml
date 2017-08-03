@@ -26,7 +26,7 @@ spec:
         - name: clients
           containerPort: 9300
         volumeMounts:
-        - name: elasticsearch-pv
+        - name: elasticsearch-pv-fast
           mountPath: /usr/share/elasticsearch/data
         command:
           - "/bin/bash"
@@ -52,12 +52,12 @@ spec:
           claimName: elasticsearch-pvc
   volumeClaimTemplates:
   - metadata:
-      name: elasticsearch-pv
+      name: elasticsearch-pvc
       annotations:
-        volume.beta.kubernetes.io/storage-class: "default"
+        volume.beta.kubernetes.io/storage-class: "gfs"
     spec:
       accessModes:
         - "ReadWriteOnce"
       resources:
         requests:
-          storage: 20Gi
+          storage: 15Gi

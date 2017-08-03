@@ -37,10 +37,3 @@ spec:
           limits:
             cpu: "500m"
             memory: "2Gi"
-        volumeMounts:
-        - name: es-master-pv
-          mountPath: /usr/share/elasticsearch/data
-      volumes:
-      - name: es-master-pv
-        persistentVolumeClaim:
-          claimName: es-master-pvc

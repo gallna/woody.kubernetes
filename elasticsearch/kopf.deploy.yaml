@@ -18,12 +18,10 @@ spec:
       containers:
       - env:
         - name: KOPF_ES_SERVERS
-          value: :9200
+          value: elasticsearch:9200
         - name: KOPF_SERVER_NAME
-          value: kopf.logspout
-        - name: LOGSPOUT
-          value: ignore
-        image: lmenezes/elasticsearch-kopf:1.6.2
+          value: kopf.elasticsearch
+        image: lmenezes/elasticsearch-kopf:2.1.2
         name: kopf
         ports:
         - containerPort: 80

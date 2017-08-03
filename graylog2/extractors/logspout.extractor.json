@@ -1,0 +1,56 @@
+{
+  "extractors": [
+    {
+      "title": "syslog-logspout",
+      "extractor_type": "grok",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "",
+      "extractor_config": {
+        "grok_pattern": "<(?<syslog5424_pri>\\d+)>(?<syslog5424_ver>\\d+)\\s(?<datetime>[\\d-]+T[\\d:]+\\w)\\s(?<syslog5424_host>[^ ]+)\\s(?<syslog5424_app>[^ ]+)\\s(?<syslog5424_proc>[^ ]+)\\s(?<syslog5424_msgid>[^ ]+)\\s(?:\\[hostname=\"(?<hostname>[^\"]*)\"\\scontainer=\"(?<container>[^\"]*)\"\\sproject=\"(?<project>[^\"]*)\"\\sstack=\"(?<stack>[^\"]*)\"\\sip=\"(?<ip>[^\"]*)\"\\]+)\\s(?<msg>.*)"
+      },
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "datetime",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "date",
+          "config": {
+            "date_format": "yyyy-MM-ddTHH:mm:ssZ",
+            "time_zone": ""
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "datetime",
+      "target_field": "datetime",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "syslog-priority-level",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "syslog_pri_level",
+          "config": {}
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "syslog5424_pri",
+      "target_field": "syslog5424_level",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    }
+  ],
+  "version": "2.2.0-SNAPSHOT"
+}

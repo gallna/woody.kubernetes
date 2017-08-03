@@ -2,20 +2,29 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   namespace: logging
-  name: graylog
+  name: graylog2
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         component: logging
-        role: master
+        role: slave
         app: graylog
     spec:
       containers:
       - image: graylog2/server:2.2.3-1
-        name: graylog
+        name: graylog2
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "2Gi"
+          limits:
+            cpu: "1"
+            memory: "4Gi"
         env:
+        - name: GRAYLOG_IS_MASTER
+          value: 'false'
         - name: GRAYLOG_WEB_ENDPOINT_URI
           value: http://graylog.wrrr.online:9000/api/
         - name: GRAYLOG_PASSWORD_SECRET
@@ -23,7 +32,7 @@ spec:
         - name: GRAYLOG_ROOT_PASSWORD_SHA2
           value: 5D5E792708BFA15F0AB42E817B4E69379777D2722E0529DFB031C0B847DB137D
         ports:
-        - name: www
+        - name: rest
           containerPort: 9000
           protocol: TCP
         - name: syslog
@@ -48,21 +57,13 @@ spec:
           containerPort: 5514
           protocol: TCP
         volumeMounts:
-        - name: graylog-config-persistent-storage
+        - name: graylog-config
           mountPath: /usr/share/graylog/data/config
-        - name: graylog-journal-pv
+        - name: graylog-journal
           mountPath: /usr/share/graylog/data/journal
-        resources:
-          requests:
-            cpu: "500m"
-            memory: "2Gi"
-          limits:
-            cpu: "1"
-            memory: "4Gi"
       volumes:
-      - name: graylog-config-persistent-storage
-        persistentVolumeClaim:
-          claimName: graylog-config-pv-claim
-      - name: graylog-journal-pv
-        persistentVolumeClaim:
-          claimName: graylog-journal-pvc
+      - name: graylog-config
+        configMap:
+          name: graylog-conf
+      - name: graylog-journal
+        emptyDir: {}

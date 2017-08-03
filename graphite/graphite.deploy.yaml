@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: graphite
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: monitoring
+        role: standalone
+        app: graphite
+    spec:
+      containers:
+      - image: graphiteapp/graphite-statsd
+        imagePullPolicy: Always
+        name: graphite
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        - name: carbon-rtext
+          containerPort: 2003
+          protocol: TCP
+        - name: carbon-rpickle
+          containerPort: 2004
+          protocol: TCP
+        - name: carbon-atext
+          containerPort: 2023
+          protocol: TCP
+        - name: carbon-apickle
+          containerPort: 2024
+          protocol: TCP
+        - name: statsd
+          containerPort: 8125
+          protocol: UDP
+        - name: statsd-admin
+          containerPort: 8126
+          protocol: TCP
+      restartPolicy: Always

@@ -7,11 +7,11 @@ metadata:
     app: graylog
     tier: mongo
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
   - port: 27017
     targetPort: 27017
   selector:
-    app: graylog
-    tier: mongo
+    component: logging
     role: master
+    app: mongo

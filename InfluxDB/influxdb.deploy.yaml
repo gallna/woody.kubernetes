@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: monitoring-influxdb
+  namespace: kube-system
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  labels:
+    k8s-app: influxdb
+    task: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: influxdb
+      task: monitoring
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: influxdb
+        task: monitoring
+    spec:
+      containers:
+      - image: gcr.io/google_containers/heapster-influxdb-amd64:v1.1.1
+        imagePullPolicy: IfNotPresent
+        name: influxdb
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /data
+          name: influxdb-storage
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: io-rancher-system
+      serviceAccountName: io-rancher-system
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: influxdb-storage
+        emptyDir: {}
+      # - name: influxdb-storage
+      #   persistentVolumeClaim:
+      #     claimName: influxdb-pvc

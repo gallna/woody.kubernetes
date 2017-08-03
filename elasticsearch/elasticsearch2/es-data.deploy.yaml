@@ -40,11 +40,4 @@ spec:
           limits:
             cpu: "1"
             memory: "3Gi"
-        volumeMounts:
-        - name: es-data-pv
-          mountPath: /usr/share/elasticsearch/data
       restartPolicy: Always
-      volumes:
-      - name: es-data-pv
-        persistentVolumeClaim:
-          claimName: es-data-pvc

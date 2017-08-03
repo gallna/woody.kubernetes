@@ -1,0 +1,331 @@
+{
+  "extractors": [
+    {
+      "title": "HAProxy (option httplog)",
+      "extractor_type": "grok",
+      "converters": [],
+      "order": 1,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "",
+      "extractor_config": {
+        "grok_pattern": "(?<hostname>\\S+) (?<tag>[^\\[]+)\\[(?<pid>\\d+)]: (?<client_ip>.+?):(?<client_port>\\d+) \\[(?<accept_date>.+?)\\] (?<frontend_port>.+?)(?<frontend_name_transport>|[\\~]) (?<backend_name>.+?)\\/(?<server_name>.+?) (?<Tq>[\\-\\d]+)\\/(?<Tw>[\\-\\d]+)\\/(?<Tc>[\\-\\d]+)\\/(?<Tr>[\\-\\d]+)\\/(?<Tt>[\\-\\d]+) (?<status_code>[\\-\\d]+) (?<bytes_read>[\\-\\d]+) (?:-|(?<captured_request_cookie>\\S+)) (?:-|\\{(?<captured_response_cookie>\\S+)\\}) (?<termination_state>\\S+) (?<actconn>[\\-\\d]+)\\/(?<feconn>[\\-\\d]+)\\/(?<beconn>[\\-\\d]+)\\/(?<srv_conn>[\\-\\d]+)\\/(?<retries>[\\-\\d]+) (?<srv_queue>[\\-\\d]+)\\/(?<backend_queue>[\\-\\d]+) \"(?<http_request>(?<http_method>\\w+) (?<http_path>.*?) (?<http_version>(?:HTTP|http)+[^\"]+))\"$",
+        "named_captures_only": false
+      },
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "accept_date",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "date",
+          "config": {
+            "date_format": "dd/MMM/YYYY:HH:mm:ss.SSS",
+            "time_zone": ""
+          }
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "accept_date",
+      "target_field": "accept_date",
+      "extractor_config": {
+        "regex_value": "(.*)"
+      },
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "status_code",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "status_code",
+      "target_field": "status_code",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "client_ip",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "ip_anonymizer",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "client_ip",
+      "target_field": "client_ip",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "actconn",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "actconn",
+      "target_field": "conn_total",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "feconn",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "feconn",
+      "target_field": "conn_frontend",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "beconn",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "beconn",
+      "target_field": "conn_backend",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "srv_conn",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "srv_conn",
+      "target_field": "conn_active",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "retries",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "retries",
+      "target_field": "conn_retries",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "backend_queue",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "backend_queue",
+      "target_field": "backend_queue",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "srv_queue",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "srv_queue",
+      "target_field": "srv_queue",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "Tw",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "Tw",
+      "target_field": "time_wait",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "Tt",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "Tt",
+      "target_field": "time_total",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "Tr",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "Tr",
+      "target_field": "time_response",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "Tq",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "Tq",
+      "target_field": "time_request",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "Tc",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "Tc",
+      "target_field": "time_connection",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "frontend_port",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "frontend_port",
+      "target_field": "frontend_port",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "bytes_read",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "bytes_read",
+      "target_field": "bytes_read",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "client_port",
+      "extractor_type": "copy_input",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 100,
+      "cursor_strategy": "copy",
+      "source_field": "client_port",
+      "target_field": "client_port",
+      "extractor_config": {},
+      "condition_type": "none",
+      "condition_value": ""
+    }
+  ],
+  "version": "2.2.0-SNAPSHOT"
+}

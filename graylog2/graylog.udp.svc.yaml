@@ -4,33 +4,28 @@ metadata:
   name: graylog-udp
   namespace: logging
   labels:
-    app: graylog
-    tier: graylog
+    component: logging
     input: udp
+    app: graylog
 spec:
   type: LoadBalancer
   ports:
-  - name: syslog-udp
-    port: 514
+  - name: syslog
+    port: 10514
     protocol: UDP
-    targetPort: 514
-  - name: syslog-rfc3164-udp
-    port: 3514
+    targetPort: 10514
+  - name: foremann
+    port: 10515
     protocol: UDP
-    targetPort: 3514
-  - name: syslog-rfc5424-udp
-    port: 5514
+    targetPort: 10515
+  - name: haproxy
+    port: 10516
     protocol: UDP
-    targetPort: 5514
-  - name: syslog-generic-udp
-    port: 5140
+    targetPort: 10516
+  - name: hosts
+    port: 10517
     protocol: UDP
-    targetPort: 5140
-  - name: syslog-rfc3164-haproxy
-    port: 11002
-    protocol: UDP
-    targetPort: 11002
+    targetPort: 10517
   selector:
+    component: logging
     app: graylog
-    tier: graylog
-    role: master
