@@ -1,2 +1,4 @@
 /efs.provisioner/
 /nfs-client.provisioner/
+/persistent-volume.yaml
+/README.md

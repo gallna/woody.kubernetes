@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: zeppelin
+  annotations:
+    # io.rancher.scheduler.affinity.host_label: "io.rahcnar.name=marshall-peter"
+    config: |-
+      global
+        log-tag zeppelin.wrrr.online
+        log-send-hostname marshall-peter
+      defaults
+        option httplog
+        log graylog.udp.wrrr.online:516 local0 debug
+spec:
+  tls:
+   - secretName: zeppelin.wrrr.online
+  backend:
+    serviceName: zeppelin
+    servicePort: 8080

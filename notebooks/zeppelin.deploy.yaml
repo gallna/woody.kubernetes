@@ -1,0 +1,63 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: zeppelin
+  labels:
+    app: notebook
+    component: zeppelin
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: notebook
+        component: zeppelin
+    spec:
+      containers:
+      - name: zeppelin
+        image: apache/zeppelin:0.7.2
+        # image: gcr.io/google_containers/zeppelin:v0.5.6_v1
+        ports:
+        - name: http
+          containerPort: 8080
+        resources:
+          requests:
+            cpu: 300m
+            memory: 2Gi
+        env:
+        - name: ZEPPELIN_NOTEBOOK_DIR
+          value: "/notebook"
+        - name: ZEPPELIN_PORT
+          value: "8080"
+        - name: ZEPPELIN_MEM
+          value: "-Xmx1024m"
+        - name: MASTER
+          value: "spark://spark-master:7077"
+        - name: ZEPPELIN_LOG_DIR
+          value: "/logs"
+        - name: ZEPPELIN_PID_DIR
+          value: "/pid"
+        volumeMounts:
+        - mountPath: /notebook
+          name: notebooks-pv
+        - mountPath: /logs
+          name: logs-pv
+        - mountPath: /pid
+          name: pid-pv
+        - name: zeppelin-log4j
+          mountPath: /zeppelin/conf
+      volumes:
+      - name: notebooks-pv
+        persistentVolumeClaim:
+          claimName: zeppelin-notebooks-pvc
+      - name: logs-pv
+        emptyDir: {}
+      - name: pid-pv
+        emptyDir: {}
+      - name: zeppelin-log4j
+        configMap:
+          name: zeppelin-log4j
+          items:
+          - key: zeppelin-log4j.properties
+            path: log4j.properties

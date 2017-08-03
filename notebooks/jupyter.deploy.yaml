@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jupyter
+  labels:
+    app: notebook
+    component: jupyter
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: notebook
+        component: jupyter
+    spec:
+      containers:
+      - name: jupyter
+        image: jupyter/pyspark-notebook
+        ports:
+        - containerPort: 8888
+        command:
+        - start-notebook.sh
+        args:
+        - --NotebookApp.token=''
+        env:
+        - name: GRANT_SUDO
+          value: "yes"
+        - name: NB_UID
+          value: "0"
+        volumeMounts:
+        - mountPath: /home/jovyan/work
+          name: notebooks-pv
+        resources:
+          requests:
+            cpu: 100m
+      volumes:
+      - name: notebooks-pv
+        persistentVolumeClaim:
+          claimName: jupyter-notebooks-pvc
